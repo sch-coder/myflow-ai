@@ -2,7 +2,7 @@ import streamlit as st
 
 from src.classifier import construire_recommandation
 from src.form_assistant import suggerer_champs
-from src.search_engine import MoteurRecherche
+from src.search_engine import MoteurRecherche, charger_procedures
 from src.validation import creer_dossier
 from ui import components as ui
 from ui.styles import appliquer_styles
@@ -40,6 +40,11 @@ def charger_moteur():
     return MoteurRecherche()
 
 
+@st.cache_data
+def charger_catalogue():
+    return charger_procedures()
+
+
 def definir_exemple(texte):
     st.session_state["demande"] = texte
 
@@ -55,6 +60,14 @@ def lancer_analyse(moteur, demande):
     return {"demande": demande, "analyse": analyse, "reco": reco, "champs": champs, "dossier": dossier}
 
 
+def obtenir_moteur():
+    try:
+        return charger_moteur()
+    except Exception as erreur:
+        st.error(f"Impossible de charger le moteur de recherche : {erreur}")
+        st.stop()
+
+
 def page_dashboard():
     st.title("Bienvenue sur MyFlow AI")
     st.markdown(
@@ -63,11 +76,7 @@ def page_dashboard():
         "**Rien n'est exécuté sans votre validation.**"
     )
 
-    try:
-        moteur = charger_moteur()
-    except Exception as erreur:
-        st.error(f"Impossible de charger le moteur de recherche : {erreur}")
-        st.stop()
+    moteur = obtenir_moteur()
 
     st.text_area(
         "Votre demande",
@@ -118,10 +127,155 @@ def page_dashboard():
             st.markdown(f"- **{r['titre']}**{suffixe} : {extrait}")
 
 
+def page_recherche():
+    st.title("Recherche intelligente")
+    st.markdown(
+        "Recherche sémantique seule : les trois procédures les plus proches de votre texte, "
+        "avec leur score. **Aucun dossier n'est créé et rien n'est enregistré.**"
+    )
+
+    moteur = obtenir_moteur()
+
+    requete = st.text_input(
+        "Votre recherche",
+        key="requete",
+        max_chars=MAX_CARACTERES,
+        placeholder="Exemple : réinitialiser un mot de passe",
+    )
+
+    if st.button("Rechercher", type="primary"):
+        if not requete.strip():
+            st.error("Saisissez un texte avant de lancer la recherche.")
+        else:
+            try:
+                with st.spinner("Recherche en cours..."):
+                    st.session_state["recherche_res"] = moteur.rechercher(requete)
+            except Exception as erreur:
+                st.session_state["recherche_res"] = None
+                st.error(f"La recherche a échoué : {erreur}")
+
+    analyse = st.session_state["recherche_res"]
+    if analyse is None:
+        st.caption("Aucune recherche pour le moment.")
+        return
+
+    if analyse["statut"] in ("trop_court", "hors_sujet"):
+        st.warning(analyse["message"])
+        return
+    if analyse["statut"] == "ambigu":
+        st.warning(analyse["message"])
+
+    st.caption("Les scores sont des similarités cosinus (scores de recherche), pas des probabilités de confiance.")
+    for rang, r in enumerate(analyse["resultats"], start=1):
+        proc = r["procedure"]
+        with st.expander(f"{rang}. {proc['titre']} : score {r['score']:.2f}", expanded=(rang == 1)):
+            st.markdown(f"**Catégorie :** {proc['categorie']}  \n**Workflow :** {proc['workflow']}")
+            st.markdown(f"**Passage le plus proche :** {r['passage']}")
+            st.markdown(f"**Source :** {proc['source']}")
+
+
+def page_recommandations():
+    st.title("Recommandations de workflow")
+    st.markdown("Catalogue des procédures de la base documentaire (fictive).")
+
+    procedures = charger_catalogue()
+    categories = sorted({p["categorie"] for p in procedures})
+    choix = st.selectbox("Catégorie", ["Toutes les catégories"] + categories)
+
+    affichees = [p for p in procedures if choix == "Toutes les catégories" or p["categorie"] == choix]
+    st.caption(f"{len(affichees)} procédure(s) affichée(s).")
+
+    for proc in affichees:
+        with st.expander(f"{proc['titre']} ({proc['id']})"):
+            st.markdown(
+                f"**Catégorie :** {proc['categorie']}  \n"
+                f"**Contexte :** {proc['contexte']}  \n"
+                f"**Workflow :** {proc['workflow']}  \n"
+                f"**Validation requise :** {proc['validation_requise']}"
+            )
+            st.markdown(proc["description"])
+            st.markdown("**Informations à fournir :**")
+            for champ in proc["champs_requis"]:
+                st.markdown(f"- {champ['libelle']}")
+            st.caption(f"Source : {proc['source']}")
+
+
+def page_documentation():
+    st.title("Documentation")
+    st.markdown(
+        """
+### Comment ça marche
+
+1. Vous décrivez votre besoin en français.
+2. Le texte est transformé en vecteur par un modèle multilingue exécuté **en local**.
+3. Ce vecteur est comparé aux passages de la base documentaire (similarité cosinus).
+4. La procédure la plus proche fournit la catégorie, le contexte, le workflow et le validateur.
+5. L'explication cite le passage de la base qui a motivé la recommandation : aucun texte n'est généré.
+6. Les champs du formulaire viennent de la procédure. Un champ inconnu reste « À renseigner par l'utilisateur ».
+7. Vous vérifiez, complétez et validez. **Rien n'est exécuté par l'application.**
+
+### Statuts d'une analyse
+
+| Statut | Signification |
+|---|---|
+| Normal | Une procédure se détache nettement. |
+| Ambigu | Deux procédures sont presque à égalité : à vous de choisir. |
+| Hors sujet | Score sous le seuil de pertinence : aucune recommandation. |
+| Trop court | Moins de deux mots : la demande n'est pas analysée. |
+
+### États d'un dossier
+
+- **Suggéré** : proposé par l'outil, non vérifié.
+- **Validé par l'utilisateur** : tous les champs ont été confirmés par vous.
+- **Refusé par l'utilisateur** : aucune suite donnée.
+
+### À savoir
+
+- Le score est une **mesure de proximité de textes**, pas une probabilité que la recommandation soit correcte.
+- Les fautes de frappe et les noms de marque peuvent mal fonctionner.
+- Le journal de traçabilité enregistre des statuts, jamais le texte de votre demande ni vos saisies.
+"""
+    )
+
+
+def page_a_propos():
+    st.title("À propos")
+    st.markdown(
+        """
+**MyFlow AI Assistant** (*Intelligent Workflow Assistant*) est un **POC personnel indépendant**.
+Ce n'est pas une application officielle d'un établissement bancaire, elle n'est connectée à aucune
+infrastructure réelle et n'utilise que des **données fictives**.
+
+### Technologies
+
+Python 3.11, Streamlit, Sentence Transformers (`paraphrase-multilingual-MiniLM-L12-v2`, local),
+scikit-learn (similarité cosinus), JSON.
+
+### Principes de conception
+
+- Traitement 100 % local, aucune donnée envoyée à l'extérieur.
+- Supervision humaine obligatoire avant toute décision.
+- Traçabilité minimale : statuts uniquement.
+- Prévention des hallucinations : classification par métadonnées, explication par citation, seuil de pertinence, détection d'ambiguïté.
+
+### Résultats des tests (très petits jeux, non statistiques)
+
+| Jeu | Top 1 | Top 3 |
+|---|---|---|
+| Développement (11 cas) | 8/11 | 11/11 |
+| Validation 1 (6 cas) | 6/6 | 6/6 |
+| Validation 2 (6 cas, partiellement contaminé) | 3/6 | 5/6 |
+
+Ces chiffres sont indicatifs : ils ne mesurent pas une précision réelle.
+"""
+    )
+
+
 def main():
     st.session_state.setdefault("demande", "")
     st.session_state.setdefault("derniere", None)
     st.session_state.setdefault("recentes", [])
+    st.session_state.setdefault("recherche_res", None)
 
     appliquer_styles()
     ui.logo_sidebar()
@@ -130,8 +284,14 @@ def main():
 
     if page == "Dashboard":
         page_dashboard()
+    elif page == "Recherche intelligente":
+        page_recherche()
+    elif page == "Recommandations de workflow":
+        page_recommandations()
+    elif page == "Documentation":
+        page_documentation()
     else:
-        ui.page_a_venir(page)
+        page_a_propos()
 
     ui.footer()
 
