@@ -27,6 +27,13 @@ EXEMPLES = {
 
 MAX_CARACTERES = 1000
 
+LIBELLES_STATUT = {
+    "ok": "",
+    "ambigu": " (ambigu)",
+    "hors_sujet": " (hors sujet, aucune recommandation)",
+    "trop_court": " (demande trop courte)",
+}
+
 
 @st.cache_resource(show_spinner="Chargement du modèle de recherche local...")
 def charger_moteur():
@@ -75,12 +82,17 @@ def page_dashboard():
         if not demande.strip():
             st.error("Saisissez une demande avant de lancer l'analyse.")
         else:
-            with st.spinner("Analyse en cours..."):
-                resultat = lancer_analyse(moteur, demande)
-            st.session_state["derniere"] = resultat
-            if resultat["reco"]:
+            try:
+                with st.spinner("Analyse en cours..."):
+                    resultat = lancer_analyse(moteur, demande)
+            except Exception as erreur:
+                st.session_state["derniere"] = None
+                st.error(f"L'analyse a échoué : {erreur}. Réessayez ou contactez le support.")
+            else:
+                st.session_state["derniere"] = resultat
+                titre = resultat["reco"]["titre"] if resultat["reco"] else "Aucune procédure"
                 st.session_state["recentes"].insert(
-                    0, {"demande": demande, "titre": resultat["reco"]["titre"], "statut": resultat["analyse"]["statut"]}
+                    0, {"demande": demande, "titre": titre, "statut": resultat["analyse"]["statut"]}
                 )
                 st.session_state["recentes"] = st.session_state["recentes"][:5]
 
@@ -101,7 +113,7 @@ def page_dashboard():
         st.caption("Aucune analyse pour le moment. Les analyses récentes restent en mémoire pendant la session uniquement.")
     else:
         for r in st.session_state["recentes"]:
-            suffixe = " (ambigu)" if r["statut"] == "ambigu" else ""
+            suffixe = LIBELLES_STATUT.get(r["statut"], "")
             extrait = r["demande"] if len(r["demande"]) <= 70 else r["demande"][:70] + "..."
             st.markdown(f"- **{r['titre']}**{suffixe} : {extrait}")
 
