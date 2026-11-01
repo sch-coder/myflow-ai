@@ -1,0 +1,15 @@
+# Environnement virtuel
+.venv/
+
+# Secrets : ne jamais versionner
+.env
+
+# Python
+__pycache__/
+*.pyc
+
+# Editeur
+.vscode/
+
+# Journal de traçabilité (local, jamais versionné)
+logs/

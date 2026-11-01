@@ -1,0 +1,256 @@
+[
+  {
+    "id": "PROC-ACC-001",
+    "titre": "Demande d'accès à une application métier",
+    "categorie": "Gestion des accès",
+    "contexte": "Onboarding",
+    "workflow": "Demande d'accès applicatif",
+    "description": "Permet à un manager de demander l'ouverture d'un accès à une application interne pour un collaborateur, par exemple un nouvel arrivant dans son service. La demande doit être justifiée et validée par le manager avant traitement.",
+    "mots_cles": ["accès", "application", "compte", "nouvel arrivant", "droits", "habilitation"],
+    "exemples_demandes": [
+      "Un nouveau collaborateur arrive dans mon service et doit accéder à l'application de gestion de comptes",
+      "Je dois donner les droits d'accès à un stagiaire sur l'outil interne"
+    ],
+    "validation_requise": "Manager",
+    "champs_requis": [
+      { "cle": "nom_collaborateur", "libelle": "Nom du collaborateur" },
+      { "cle": "service", "libelle": "Service" },
+      { "cle": "application", "libelle": "Application concernée" },
+      { "cle": "justification", "libelle": "Justification métier" }
+    ],
+    "source": "Document fictif DOC-ACC-001 : Procédure d'accès applicatif (v1.0)"
+  },
+  {
+    "id": "PROC-MAT-001",
+    "titre": "Demande de matériel informatique",
+    "categorie": "Matériel",
+    "contexte": "Équipement",
+    "workflow": "Demande de matériel",
+    "description": "Permet de demander un équipement informatique (ordinateur portable, écran, clavier, souris, périphérique audio ou vidéo, accessoire) ou le remplacement d'un équipement cassé, endommagé, hors service ou ancien. La demande est validée par le manager puis traitée par le support.",
+    "mots_cles": ["ordinateur", "portable", "écran", "clavier", "souris", "périphérique", "accessoire", "matériel", "équipement", "remplacement", "cassé", "endommagé", "hors service", "commander"],
+    "exemples_demandes": [
+      "Mon ordinateur portable est trop lent, je voudrais en demander un nouveau",
+      "J'ai besoin d'un deuxième écran pour mon poste de travail",
+      "Un accessoire de mon poste est endommagé et doit être remplacé",
+      "Le matériel que l'on m'a fourni est cassé, comment en obtenir un autre ?"
+    ],
+    "validation_requise": "Manager",
+    "champs_requis": [
+      { "cle": "type_materiel", "libelle": "Type de matériel" },
+      { "cle": "motif", "libelle": "Motif de la demande" },
+      { "cle": "service", "libelle": "Service" },
+      { "cle": "urgence", "libelle": "Niveau d'urgence" }
+    ],
+    "source": "Document fictif DOC-MAT-001 : Procédure de demande d'équipement (v1.0)"
+  },
+  {
+    "id": "PROC-INC-001",
+    "titre": "Déclaration d'un incident informatique",
+    "categorie": "Incident",
+    "contexte": "Support",
+    "workflow": "Ouverture d'un ticket d'incident",
+    "description": "Permet de signaler un dysfonctionnement bloquant ou gênant : application inaccessible, erreur, lenteur, panne de poste, poste qui ne s'allume pas ou qui reste sur un écran noir. Un ticket est ouvert et priorisé selon l'impact sur l'activité.",
+    "mots_cles": ["incident", "panne", "bug", "erreur", "ne fonctionne pas", "bloqué", "ticket", "lenteur", "écran noir", "ne s'allume pas", "plante"],
+    "exemples_demandes": [
+      "L'application de gestion ne s'ouvre plus depuis ce matin",
+      "Mon poste plante en boucle et je ne peux plus travailler",
+      "Mon poste de travail reste sur un écran noir et ne s'allume plus"
+    ],
+    "validation_requise": "Aucune (validation par le support lors de la prise en charge)",
+    "champs_requis": [
+      { "cle": "description_incident", "libelle": "Description de l'incident" },
+      { "cle": "application", "libelle": "Application ou équipement concerné" },
+      { "cle": "impact", "libelle": "Impact sur l'activité" },
+      { "cle": "date_heure", "libelle": "Date et heure du constat" }
+    ],
+    "source": "Document fictif DOC-INC-001 : Procédure de gestion des incidents (v1.0)"
+  },
+  {
+    "id": "PROC-ACC-002",
+    "titre": "Retrait ou suppression d'un accès applicatif",
+    "categorie": "Gestion des accès",
+    "contexte": "Départ ou changement de poste",
+    "workflow": "Retrait d'accès applicatif",
+    "description": "Permet de demander la suppression des droits d'un collaborateur sur une application, lors d'un départ, d'une mobilité ou d'un changement de périmètre. La demande est validée par le manager.",
+    "mots_cles": ["retirer", "supprimer", "accès", "départ", "mobilité", "droits", "révocation"],
+    "exemples_demandes": [
+      "Un collaborateur quitte mon service, je dois supprimer ses accès",
+      "Je veux retirer les droits d'un collègue qui a changé de poste"
+    ],
+    "validation_requise": "Manager",
+    "champs_requis": [
+      { "cle": "nom_collaborateur", "libelle": "Nom du collaborateur" },
+      { "cle": "application", "libelle": "Application concernée" },
+      { "cle": "date_effet", "libelle": "Date d'effet du retrait" },
+      { "cle": "motif", "libelle": "Motif du retrait" }
+    ],
+    "source": "Document fictif DOC-ACC-002 : Procédure de retrait d'accès (v1.0)"
+  },
+  {
+    "id": "PROC-ACC-003",
+    "titre": "Réinitialisation de mot de passe",
+    "categorie": "Gestion des accès",
+    "contexte": "Support utilisateur",
+    "workflow": "Réinitialisation de mot de passe",
+    "description": "Permet de demander la réinitialisation d'un mot de passe oublié ou d'un compte verrouillé après plusieurs tentatives échouées. L'identité du demandeur est vérifiée avant toute action.",
+    "mots_cles": ["mot de passe", "oublié", "verrouillé", "réinitialisation", "connexion", "compte bloqué"],
+    "exemples_demandes": [
+      "J'ai oublié mon mot de passe et je n'arrive plus à me connecter",
+      "Mon compte est verrouillé après plusieurs essais"
+    ],
+    "validation_requise": "Vérification d'identité par le support",
+    "champs_requis": [
+      { "cle": "identifiant", "libelle": "Identifiant du compte" },
+      { "cle": "application", "libelle": "Application concernée" },
+      { "cle": "moyen_contact", "libelle": "Moyen de contact pour la vérification" }
+    ],
+    "source": "Document fictif DOC-ACC-003 : Procédure de réinitialisation de mot de passe (v1.0)"
+  },
+  {
+    "id": "PROC-LOG-001",
+    "titre": "Demande d'installation d'un logiciel",
+    "categorie": "Installation logicielle",
+    "contexte": "Poste de travail",
+    "workflow": "Demande d'installation logicielle",
+    "description": "Permet de demander l'installation d'un logiciel figurant au catalogue interne sur un poste de travail. La demande est validée par le manager, et le logiciel est installé par le support.",
+    "mots_cles": ["installer", "logiciel", "application", "catalogue", "poste de travail", "licence"],
+    "exemples_demandes": [
+      "J'ai besoin d'installer un logiciel de gestion de projet sur mon poste",
+      "Pouvez-vous installer un outil de traitement de données sur mon ordinateur ?"
+    ],
+    "validation_requise": "Manager",
+    "champs_requis": [
+      { "cle": "nom_logiciel", "libelle": "Nom du logiciel" },
+      { "cle": "justification", "libelle": "Justification métier" },
+      { "cle": "poste", "libelle": "Poste de travail concerné" }
+    ],
+    "source": "Document fictif DOC-LOG-001 : Procédure d'installation logicielle (v1.0)"
+  },
+  {
+    "id": "PROC-LOG-002",
+    "titre": "Demande d'un logiciel ou d'un service en ligne hors catalogue",
+    "categorie": "Installation logicielle",
+    "contexte": "Besoin spécifique",
+    "workflow": "Demande d'évaluation d'un logiciel hors catalogue",
+    "description": "Permet de demander l'étude d'un logiciel ou d'un service en ligne absent du catalogue interne, y compris un outil d'intelligence artificielle générative. Une évaluation de sécurité et de conformité est réalisée avant toute décision, notamment sur les données qui seraient transmises à un service externe, avec validation du manager puis de la sécurité.",
+    "mots_cles": ["hors catalogue", "nouveau logiciel", "évaluation", "sécurité", "conformité", "outil externe", "service en ligne", "intelligence artificielle", "IA générative", "autorisé", "données transmises"],
+    "exemples_demandes": [
+      "Je voudrais utiliser un outil qui n'est pas dans la liste des logiciels autorisés",
+      "Mon équipe souhaite tester un nouveau logiciel du marché",
+      "Ai-je le droit d'utiliser un service d'intelligence artificielle en ligne pour mon activité ?"
+    ],
+    "validation_requise": "Manager puis équipe sécurité",
+    "champs_requis": [
+      { "cle": "nom_logiciel", "libelle": "Nom du logiciel" },
+      { "cle": "editeur", "libelle": "Éditeur" },
+      { "cle": "besoin_metier", "libelle": "Besoin métier" },
+      { "cle": "donnees_traitees", "libelle": "Données traitées par le logiciel" }
+    ],
+    "source": "Document fictif DOC-LOG-002 : Procédure d'évaluation d'un logiciel hors catalogue (v1.0)"
+  },
+  {
+    "id": "PROC-ONB-001",
+    "titre": "Préparation de l'arrivée d'un nouveau collaborateur",
+    "categorie": "Onboarding",
+    "contexte": "Arrivée d'un collaborateur",
+    "workflow": "Préparation du poste et des accès d'un nouvel arrivant",
+    "description": "Permet au manager d'anticiper l'arrivée d'un nouveau collaborateur (salarié, stagiaire, alternant en contrat d'apprentissage ou de professionnalisation) : poste de travail, compte de base et accès nécessaires. La demande doit être déposée avant la date d'arrivée.",
+    "mots_cles": ["nouvel arrivant", "arrivée", "onboarding", "poste", "compte", "stagiaire", "recrutement", "alternant", "alternance", "rentrée", "début de contrat"],
+    "exemples_demandes": [
+      "Un stagiaire arrive lundi prochain, que dois-je préparer ?",
+      "Je dois organiser l'équipement et les comptes d'une nouvelle recrue",
+      "Un alternant rejoint mon équipe à la rentrée, quelles démarches dois-je anticiper ?"
+    ],
+    "validation_requise": "Manager",
+    "champs_requis": [
+      { "cle": "nom_collaborateur", "libelle": "Nom du collaborateur" },
+      { "cle": "date_arrivee", "libelle": "Date d'arrivée" },
+      { "cle": "service", "libelle": "Service" },
+      { "cle": "type_contrat", "libelle": "Type de contrat" }
+    ],
+    "source": "Document fictif DOC-ONB-001 : Procédure d'accueil d'un nouvel arrivant (v1.0)"
+  },
+  {
+    "id": "PROC-ONB-002",
+    "titre": "Gestion du départ d'un collaborateur",
+    "categorie": "Onboarding",
+    "contexte": "Départ d'un collaborateur",
+    "workflow": "Clôture des comptes et restitution du matériel",
+    "description": "Permet de préparer le départ d'un collaborateur : désactivation des comptes, retrait des accès et restitution du matériel. La demande est validée par le manager.",
+    "mots_cles": ["départ", "fin de contrat", "restitution", "désactivation", "matériel", "comptes"],
+    "exemples_demandes": [
+      "Mon stagiaire termine sa mission vendredi, comment clôturer ses comptes ?",
+      "Un collègue quitte l'entreprise et doit rendre son ordinateur"
+    ],
+    "validation_requise": "Manager",
+    "champs_requis": [
+      { "cle": "nom_collaborateur", "libelle": "Nom du collaborateur" },
+      { "cle": "date_depart", "libelle": "Date de départ" },
+      { "cle": "materiel_a_restituer", "libelle": "Matériel à restituer" }
+    ],
+    "source": "Document fictif DOC-ONB-002 : Procédure de départ d'un collaborateur (v1.0)"
+  },
+  {
+    "id": "PROC-CPT-001",
+    "titre": "Modification des informations d'un compte",
+    "categorie": "Modification de compte",
+    "contexte": "Mise à jour administrative",
+    "workflow": "Modification de compte utilisateur",
+    "description": "Permet de demander la mise à jour des informations d'un compte : nom, service de rattachement, adresse e-mail, manager ou responsable hiérarchique. La demande est validée par le manager.",
+    "mots_cles": ["modifier", "compte", "nom", "service", "rattachement", "e-mail", "mise à jour", "manager", "responsable hiérarchique", "changement de manager"],
+    "exemples_demandes": [
+      "Un collaborateur change de service, je dois mettre à jour son compte",
+      "Le nom de famille d'une collègue a changé et doit être corrigé dans l'annuaire",
+      "Le manager rattaché à un compte a changé et doit être mis à jour dans l'annuaire"
+    ],
+    "validation_requise": "Manager",
+    "champs_requis": [
+      { "cle": "identifiant", "libelle": "Identifiant du compte" },
+      { "cle": "information_a_modifier", "libelle": "Information à modifier" },
+      { "cle": "nouvelle_valeur", "libelle": "Nouvelle valeur" }
+    ],
+    "source": "Document fictif DOC-CPT-001 : Procédure de modification de compte (v1.0)"
+  },
+  {
+    "id": "PROC-CPT-002",
+    "titre": "Modification des droits d'un compte existant",
+    "categorie": "Modification de compte",
+    "contexte": "Changement de périmètre",
+    "workflow": "Modification de profil d'habilitation",
+    "description": "Permet de demander l'ajout ou la réduction de droits sur un compte existant à la suite d'un changement de poste ou de missions. La demande est justifiée et validée par le manager.",
+    "mots_cles": ["droits", "profil", "habilitation", "changement de poste", "élargir", "réduire", "périmètre"],
+    "exemples_demandes": [
+      "Un collaborateur évolue vers un poste de responsable et a besoin de droits supplémentaires",
+      "Je veux réduire les droits d'un compte qui n'en a plus besoin"
+    ],
+    "validation_requise": "Manager",
+    "champs_requis": [
+      { "cle": "identifiant", "libelle": "Identifiant du compte" },
+      { "cle": "application", "libelle": "Application concernée" },
+      { "cle": "droits_demandes", "libelle": "Droits demandés ou retirés" },
+      { "cle": "justification", "libelle": "Justification métier" }
+    ],
+    "source": "Document fictif DOC-CPT-002 : Procédure de modification des droits (v1.0)"
+  },
+  {
+    "id": "PROC-INC-002",
+    "titre": "Signalement d'un incident de sécurité",
+    "categorie": "Incident",
+    "contexte": "Sécurité",
+    "workflow": "Signalement d'un incident de sécurité",
+    "description": "Permet de signaler un événement suspect : e-mail d'hameçonnage ou lien douteux, perte ou vol d'équipement, support de stockage amovible inconnu ou reçu d'une personne extérieure, comportement anormal d'un poste. Le signalement est transmis à l'équipe sécurité qui qualifie l'incident.",
+    "mots_cles": ["sécurité", "phishing", "hameçonnage", "vol", "perte", "suspect", "virus", "malveillant", "support amovible", "périphérique inconnu", "arnaque", "piégé"],
+    "exemples_demandes": [
+      "J'ai reçu un e-mail suspect qui ressemble à du phishing",
+      "J'ai perdu mon ordinateur portable professionnel",
+      "Un support de stockage amovible inconnu a été branché ou trouvé dans les locaux"
+    ],
+    "validation_requise": "Qualification par l'équipe sécurité",
+    "champs_requis": [
+      { "cle": "description_evenement", "libelle": "Description de l'événement" },
+      { "cle": "date_heure", "libelle": "Date et heure du constat" },
+      { "cle": "equipement_concerne", "libelle": "Équipement ou compte concerné" }
+    ],
+    "source": "Document fictif DOC-INC-002 : Procédure de signalement d'un incident de sécurité (v1.0)"
+  }
+]
